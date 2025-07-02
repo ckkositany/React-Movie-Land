@@ -5,13 +5,6 @@ import MovieCard from "./MovieCard";
 const API_URL = process.env.REACT_APP_API;
 
 
-const movieResult = {
-    "Title": "Final Destination",
-    "Year": "2000",
-    "imdbID": "tt0195714",
-    "Type": "movie",
-    "Poster": "https://m.media-amazon.com/images/M/MV5BMjE1MjlmOWYtYzdjMS00OTgwLThjMDctZWU4N2FkZjgyNTJiXkEyXkFqcGc@._V1_SX300.jpg"
-}
 
 function App() {
         //handles state of feteched movies

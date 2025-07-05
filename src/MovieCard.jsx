@@ -2,9 +2,9 @@ import React from "react";
 
 
 //props destructuring
-function MovieCard({movie}) {
+function MovieCard({movie,onDetail}) {
     return(
-        <div className="movie">
+        <div className="movie" onClick={()=>{onDetail(movie.Title,movie.Year)}}>
                 <div>
                     <p>{movie.Year}</p>
                 </div>

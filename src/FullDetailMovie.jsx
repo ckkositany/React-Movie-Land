@@ -1,6 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-function FullDetailMovie({fullMovie}) {
+function FullDetailMovie({fullMovie,onTrailer}) {
+    
+    const [videoId, setVideoId]= useState(null)
+
+    useEffect(()=>{
+        async function fetchTrailerId() {
+            if(fullMovie?.Title){
+                const id = await onTrailer(fullMovie.Title)
+                setVideoId(id)
+            }
+            
+        }
+
+        fetchTrailerId();
+
+    }, [fullMovie,onTrailer])
+
     return (
         <div>
         <div className="movie-detail">
@@ -44,18 +60,22 @@ function FullDetailMovie({fullMovie}) {
         <div><strong>⭐ Rating:</strong> {fullMovie.imdbRating}</div>
   </div>
 </div>
+{/* ✅ Trailer Embed */}
+        {videoId ? (
+          <iframe
+            width="100%"
+            height="300"
+            src={`https://www.youtube.com/embed/${videoId}`}
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            title={`${fullMovie.Title} Trailer`}
+            style={{ borderRadius: "10px", marginTop: "1.5rem" }}
+          />
+        ) : (
+          <p style={{ color: "#f0f0f0" }}>Loading trailer...</p>
+        )}
 
-
-    <iframe
-    height="300"
-    src={<iframe
-  src={`https://www.youtube.com/embed/`}
-/>}
-    frameBorder="0"
-    allow="autoplay; encrypted-media"
-    allowFullScreen
-    title="Trailer"
-    />
     </div>
 
     </div> 

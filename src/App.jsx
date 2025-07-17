@@ -8,15 +8,12 @@ const YOUTUBE_API= process.env.REACT_APP_YOUTUBE_API_KEY;
 const YOUTUBE_URL=process.env.REACT_APP_YOUTUBE_URL
 
 
-
-
-
 function App() {
         //handles state of feteched movies
     const [movies, setMovies] = useState([])
     const [searchTerm, setSearchTerm]= useState("")
     const [fullDetail, setFullDetail]= useState([])
-    
+    const [searchSubmitted, setSearchSubmitted] = useState(false)
     //function to handle rating
     async function getFullDetail(movieTitle,year) {
         const response= await fetch(`${API_URL}&t=${movieTitle}&y=${year}`)
@@ -76,9 +73,13 @@ function App() {
    
 
     function handleSearchClick() {
-        searchMovie(searchTerm);
-        setSearchTerm("");
+       if (searchTerm.trim() !== "") {
+    setSearchSubmitted(true)
+    searchMovie(searchTerm);
+  }
+  setSearchTerm("");
     }
+   
 
     function handleMovie(mTitle,mYear) {
             getFullDetail(mTitle,mYear)
@@ -86,47 +87,54 @@ function App() {
         
     }
        
-    return (
+   return (
   <div className="app">
     <h1>Movie Land</h1>
 
-    {/* 🔍 Search input */}
-    {!fullDetail && (
-      <div className="search">
-        <input
-          placeholder="Enter name of the movie"
-          value={searchTerm}
-          onChange={handleChange}
-        />
-        <img
-          src={SearchIcon}
-          alt="search icon"
-          onClick={handleSearchClick}
-        />
-      </div>
-    )}
+    {/* 🔍 Search Input (Always Showed) */}
+    <div className="search">
+      <input
+        placeholder="Enter name of the movie"
+        value={searchTerm}
+        onChange={handleChange}
+        onKeyDown={(e)=>{
+          if (e.key === "Enter") {
+            handleSearchClick()
+          }
+        }}
+      />
+      <img
+        src={SearchIcon}
+        alt="search icon"
+        onClick={handleSearchClick}
+      />
+    </div>
 
-    {/* ✅ Show Full Detail OR List */}
-    {fullDetail ? (
+    {/* 🎬 Full Movie Detail (When Clicked) */}
+    {fullDetail && fullDetail.Title ? (
       <div>
-        <button onClick={() => setFullDetail(null)} style={{ marginBottom: "1rem" }}>
+        <button className="back-button" onClick={() => setFullDetail(null)} style={{ marginBottom: "1rem" }}>
           ← Back to Results
         </button>
-        <FullDetailMovie
-          fullMovie={fullDetail}
-          onTrailer={getMovieTrailer}
-        />
-      </div>
-    ) : movies?.length > 0 ? (
-      <div className="container">
-        {movies.map((movie, index) => (
-          <MovieCard key={index} movie={movie} onDetail={handleMovie} />
-        ))}
+        <FullDetailMovie fullMovie={fullDetail} onTrailer={getMovieTrailer} />
       </div>
     ) : (
-      <div className="empty">
-        <h2>No movie found!!</h2>
-      </div>
+      <>
+        {/* Only show results or "not found" if user submitted a search */}
+        {searchSubmitted && (
+          movies?.length > 0 ? (
+            <div className="container">
+              {movies.map((movie, index) => (
+                <MovieCard key={index} movie={movie} onDetail={handleMovie} />
+              ))}
+            </div>
+          ) : (
+            <div className="empty">
+              <h2>No movie found!!</h2>
+            </div>
+          )
+        )}
+      </>
     )}
   </div>
 );

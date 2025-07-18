@@ -21,7 +21,7 @@ function FullDetailMovie({fullMovie,onTrailer}) {
         <div>
         <div className="movie-detail">
         <div>
-        <img
+        <img loading="lazy"
         src={
         fullMovie.Poster !== "N/A"
         ?fullMovie.Poster
@@ -58,6 +58,8 @@ function FullDetailMovie({fullMovie,onTrailer}) {
         <div><strong>⏱ Runtime:</strong> {fullMovie.Runtime}</div>
         <div><strong>🌍 Country:</strong> {fullMovie.Country}</div>
         <div><strong>⭐ Rating:</strong> {fullMovie.imdbRating}</div>
+         <div><strong>⭐ Year:</strong> {fullMovie.Year}</div>
+        
   </div>
 </div>
 {/* ✅ Trailer Embed */}

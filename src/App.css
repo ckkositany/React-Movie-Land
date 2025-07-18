@@ -317,3 +317,111 @@ h1 {
 .back-button:hover {
   background-color: #444;
 }
+/* Handles the featuredmovie cards */
+.fade-in {
+  animation: fadeIn 1.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Make search input responsive */
+.search input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+/* Stack search on small screens */
+@media (max-width: 600px) {
+  .search {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .container {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+  }
+
+  .movie {
+    width: 100%;
+  }
+
+  .back-button {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+}
+.trending-section {
+  padding: 2rem 1rem;
+  text-align: center;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  border-radius: 16px;
+  margin: 1rem auto;
+  max-width: 1200px;
+}
+
+.trending-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #ffd700;
+}
+
+@media (max-width: 768px) {
+  .trending-title {
+    font-size: 1.5rem;
+  }
+
+  .trending-section {
+    padding: 1.5rem 0.75rem;
+  }
+}
+.loading-spinner {
+  color: #fff;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+  animation: pulse 1.2s infinite;
+  text-align: center;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+/* src/components/Loader.css */
+.skeleton-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.skeleton-card {
+  width: 200px;
+  background: #1e1e1e;
+  border-radius: 10px;
+  padding: 0.5rem;
+}
+
+.skeleton-text {
+  margin-top: 0.5rem;
+}
+
+.skeleton-detail {
+  padding: 2rem;
+  max-width: 600px;
+  margin: auto;
+}

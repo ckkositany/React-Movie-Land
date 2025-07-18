@@ -1,8 +1,11 @@
-import React, { useState} from "react";
+import React, { useState, useRef} from "react";
 import './App.css'
 import SearchIcon from './Search.svg'
 import MovieCard from "./MovieCard";
 import FullDetailMovie from "./FullDetailMovie"
+import FeaturedMovies from "./FeaturedMovies"
+import {motion} from "framer-motion"
+import Loader from "./Loader";
 const API_URL = process.env.REACT_APP_API;
 const YOUTUBE_API= process.env.REACT_APP_YOUTUBE_API_KEY;
 const YOUTUBE_URL=process.env.REACT_APP_YOUTUBE_URL
@@ -14,6 +17,8 @@ function App() {
     const [searchTerm, setSearchTerm]= useState("")
     const [fullDetail, setFullDetail]= useState([])
     const [searchSubmitted, setSearchSubmitted] = useState(false)
+    const [initialLoad, setInitialLoad] = useState(true);
+
     //function to handle rating
     async function getFullDetail(movieTitle,year) {
         const response= await fetch(`${API_URL}&t=${movieTitle}&y=${year}`)
@@ -71,6 +76,7 @@ function App() {
 
 
    
+    const resultsRef= useRef()
 
     function handleSearchClick() {
        if (searchTerm.trim() !== "") {
@@ -78,6 +84,9 @@ function App() {
     searchMovie(searchTerm);
   }
   setSearchTerm("");
+   setTimeout(() => {
+    resultsRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, 200); // Wait for DOM to render
     }
    
 
@@ -99,40 +108,62 @@ function App() {
         onChange={handleChange}
         onKeyDown={(e)=>{
           if (e.key === "Enter") {
+             setInitialLoad(false)
             handleSearchClick()
+           
           }
         }}
       />
       <img
         src={SearchIcon}
         alt="search icon"
-        onClick={handleSearchClick}
+        onClick={()=>{
+          setInitialLoad(false)
+          handleSearchClick()
+        }}
       />
     </div>
-
+        {/* Handles trending movies */}
+   
+        {/* <FeaturedMovies onDetail={handleMovie} /> */}
     {/* 🎬 Full Movie Detail (When Clicked) */}
     {fullDetail && fullDetail.Title ? (
       <div>
         <button className="back-button" onClick={() => setFullDetail(null)} style={{ marginBottom: "1rem" }}>
-          ← Back to Results
+          ← Go Back
         </button>
         <FullDetailMovie fullMovie={fullDetail} onTrailer={getMovieTrailer} />
       </div>
     ) : (
       <>
+          {/* ✅ Show featured movies only if it's initial load */}
+            {initialLoad && (
+        <section className="trending-section">
+          <motion.h2
+  className="trending-title"
+  initial={{ opacity: 0, y: -10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6 }}
+>
+  🎬 Trending Right Now
+</motion.h2>
+          <FeaturedMovies onDetail={handleMovie} />
+        </section>
+      )}
+
         {/* Only show results or "not found" if user submitted a search */}
         {searchSubmitted && (
           movies?.length > 0 ? (
-            <div className="container">
+            <div className="container" ref={resultsRef}>
               {movies.map((movie, index) => (
                 <MovieCard key={index} movie={movie} onDetail={handleMovie} />
               ))}
             </div>
-          ) : (
-            <div className="empty">
-              <h2>No movie found!!</h2>
-            </div>
-          )
+          )  : (
+              <div className="empty">
+                <h2>No movie found!!</h2>
+              </div>
+            )
         )}
       </>
     )}

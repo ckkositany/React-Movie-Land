@@ -1,9 +1,10 @@
 import React, {useState,useEffect} from "react";
 import axios from "axios"
 import {useQuery} from "@tanstack/react-query"
-import MovieCard from "./MovieCard";
+import { logError } from "../utils/logger"
+import MovieCard from "../components/MovieCard";
 import {motion} from "framer-motion"
-import Loader from "./Loader"
+import Loader from "../components/Loader"
 
 
 const API_URL = process.env.REACT_APP_API;
@@ -36,6 +37,7 @@ function FeaturedMovies({ onDetail }) {
           
          setTmdData(featuredNames);
         } catch (err) {
+          logError("Failed to trending movieNames from TMDB: ",err)
           console.error(err)
         }
       

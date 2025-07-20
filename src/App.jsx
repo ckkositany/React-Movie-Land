@@ -1,11 +1,14 @@
 import React, { useState, useRef} from "react";
 import './App.css'
-import SearchIcon from './Search.svg'
-import MovieCard from "./MovieCard";
-import FullDetailMovie from "./FullDetailMovie"
-import FeaturedMovies from "./FeaturedMovies"
+import { logError } from "./utils/logger"
+import SearchIcon from './assets/Search.svg'
+import MovieCard from "./components/MovieCard";
+import FullDetailMovie from "./pages/FullDetailMovie"
+import FeaturedMovies from "./pages/FeaturedMovies"
 import {motion} from "framer-motion"
-import Loader from "./Loader";
+import Loader from "./components/Loader";
+import ErrorBoundary from "./components/ErrorBoundary"
+import SearchBar from "./components/SearchBar"
 const API_URL = process.env.REACT_APP_API;
 const YOUTUBE_API= process.env.REACT_APP_YOUTUBE_API_KEY;
 const YOUTUBE_URL=process.env.REACT_APP_YOUTUBE_URL
@@ -21,18 +24,28 @@ function App() {
 
     //function to handle rating
     async function getFullDetail(movieTitle,year) {
-        const response= await fetch(`${API_URL}&t=${movieTitle}&y=${year}`)
+      try {
+           const response= await fetch(`${API_URL}&t=${movieTitle}&y=${year}`)
         const resData= await response.json()
         setFullDetail(resData)
         console.log("Full details after click",resData.Director)
+      } catch (error) {
+        logError("Error fetching movieTitle and Year from OMDB:", error)
+      }
+       
     }
 
     //function to handle movie fetching from api 
   async  function searchMovie(title) {
-        const response = await fetch(`${API_URL}&s=${title}`)
+    try {
+         const response = await fetch(`${API_URL}&s=${title}`)
         const data=  await response.json()
         setMovies(data.Search)
         //console.log(data.Search)
+    } catch (error) {
+       logError("Error fetching movieTitle from OMDB:", error)
+    }
+       
     }
 
 
@@ -69,7 +82,8 @@ function App() {
             return null;
             }
         } catch (error) {
-            console.error("Error fetching trailer:", error);
+          logError("Error fetching trailer:", error)
+            // console.error("Error fetching trailer:", error);
             return null;
         }
 }
@@ -97,34 +111,20 @@ function App() {
     }
        
    return (
+    <ErrorBoundary>
   <div className="app">
     <h1>Movie Land</h1>
 
-    {/* 🔍 Search Input (Always Showed) */}
-    <div className="search">
-      <input
-        placeholder="Enter name of the movie"
-        value={searchTerm}
-        onChange={handleChange}
-        onKeyDown={(e)=>{
-          if (e.key === "Enter") {
-             setInitialLoad(false)
-            handleSearchClick()
-           
-          }
-        }}
-      />
-      <img
-        src={SearchIcon}
-        alt="search icon"
-        onClick={()=>{
-          setInitialLoad(false)
-          handleSearchClick()
-        }}
-      />
-    </div>
-        {/* Handles trending movies */}
-   
+          <SearchBar
+            searchTerm={searchTerm}
+            handleChange={handleChange}
+            handleSearchClick={() => {
+              setInitialLoad(false);
+              handleSearchClick();
+            }}
+/>
+
+    
         {/* <FeaturedMovies onDetail={handleMovie} /> */}
     {/* 🎬 Full Movie Detail (When Clicked) */}
     {fullDetail && fullDetail.Title ? (
@@ -168,6 +168,7 @@ function App() {
       </>
     )}
   </div>
+  </ErrorBoundary>
 );
 
 }

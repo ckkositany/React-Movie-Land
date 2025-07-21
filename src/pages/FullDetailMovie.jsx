@@ -46,19 +46,19 @@ function FullDetailMovie({fullMovie,onTrailer}) {
     <div className="movie-meta-grid">
         <div><strong>🎭 Genre:</strong> {fullMovie.Genre}</div>
         <div><strong>🧑 Actors:</strong> {fullMovie.Actors}</div>
-        <div><strong><p>
-        🎬 Directed by <strong>
+        <div><p> <strong>
+        🎬 Directed by: </strong>
             {fullMovie.Director !=="N/A"
                 ?fullMovie.Director
                 : ""
             }
-            </strong>
-        </p></strong></div>
+            
+        </p></div>
         <div><strong>🗣 Language:</strong> {fullMovie.Language}</div>
         <div><strong>⏱ Runtime:</strong> {fullMovie.Runtime}</div>
         <div><strong>🌍 Country:</strong> {fullMovie.Country}</div>
         <div><strong>⭐ Rating:</strong> {fullMovie.imdbRating}</div>
-         <div><strong>⭐ Year:</strong> {fullMovie.Year}</div>
+         <div><strong>🗓️ Year:</strong> {fullMovie.Year}</div>
         
   </div>
 </div>

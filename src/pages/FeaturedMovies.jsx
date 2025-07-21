@@ -29,10 +29,10 @@ function FeaturedMovies({ onDetail }) {
 
           const response = await axios.get('https://api.themoviedb.org/3/trending/all/day', config); // Replace with your API endpoint
           const data = await response.data
-          console.log("Data from TMDB",data.results);
+          // console.log("Data from TMDB",data.results);
           const resultData= await data.results
           const featuredNames= await resultData.map(obj => obj.name || obj.title || "Unnamed")
-          console.log("^^^^^^^^^>>>>>>",featuredNames);
+          // console.log("^^^^^^^^^>>>>>>",featuredNames);
           
           
          setTmdData(featuredNames);
@@ -43,7 +43,7 @@ function FeaturedMovies({ onDetail }) {
       
         }
         fetchMovies()
-        console.log(tmdData);
+        // console.log(tmdData);
         
       },[])
 

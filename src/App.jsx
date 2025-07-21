@@ -1,7 +1,6 @@
 import React, { useState, useRef} from "react";
 import './App.css'
 import { logError } from "./utils/logger"
-import SearchIcon from './assets/Search.svg'
 import MovieCard from "./components/MovieCard";
 import FullDetailMovie from "./pages/FullDetailMovie"
 import FeaturedMovies from "./pages/FeaturedMovies"
@@ -28,7 +27,7 @@ function App() {
            const response= await fetch(`${API_URL}&t=${movieTitle}&y=${year}`)
         const resData= await response.json()
         setFullDetail(resData)
-        console.log("Full details after click",resData.Director)
+        // console.log("Full details after click",resData.Director)
       } catch (error) {
         logError("Error fetching movieTitle and Year from OMDB:", error)
       }
@@ -74,7 +73,7 @@ function App() {
 
             if (data.items && data.items.length > 0) {
             const videoId = data.items[0].id.videoId;
-            console.log('Requested movie Id',videoId);
+            // console.log('Requested movie Id',videoId);
             
             return videoId;
             } else {
@@ -113,7 +112,15 @@ function App() {
    return (
     <ErrorBoundary>
   <div className="app">
-    <h1>Movie Land</h1>
+    <h1 
+      onClick={() => {
+    setSearchTerm("");        // Clear search input
+    setInitialLoad(true);     // Reset to show trending
+    setSearchSubmitted(false)
+    setMovies([]);     // Optional: clear previous results
+  }}
+  style={{ cursor: 'pointer' }}
+    >Movie Land</h1>
 
           <SearchBar
             searchTerm={searchTerm}
